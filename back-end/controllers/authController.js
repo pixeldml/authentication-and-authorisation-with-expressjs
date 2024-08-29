@@ -167,10 +167,37 @@ const update_user_profile = async (req, res) => {
     }
 }
 
+const delete_user_by_username = async (req, res) => {
+    try {
+        const { username } = req.body;
+
+        if (!username) {
+            return res.status(400).json({ message: "Invalid Request" });
+        }
+
+        // Check if user exists
+        const user = await UserModel.findOne({ where: { username } });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Deletes
+        await UserModel.destroy({ where: { username } });
+
+        return res.status(200).json({ message: "User Deleted", ok: true });
+    } catch (error) {
+        console.error("Error during user deletion:", error);
+        return res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
+
+
 module.exports = {
     login,
     logout,
     register,
     load_user_profile,
-    update_user_profile
+    update_user_profile,
+    delete_user_by_username
 }

@@ -3,15 +3,12 @@ const router = express.Router();//change handler to this router
 const authentication = require('../service/security/authentication');
 
 //DB Files
-const authController = require('../controllers/authController');
+const adminController = require('../controllers/adminController');
 const authorisation = require('../service/security/authorisation');
 
 //Route
-router.post('/login', (req, res) => authController.login(req, res))
-router.post('/logout', (req, res) => authController.logout(req, res))
-router.post('/register', (req, res) => authController.register(req, res))
-
-router.get('/user', authentication, authorisation("user"), (req, res) => authController.load_user_profile(req, res))
-router.put('/user', authentication, authorisation("user"), (req, res) => authController.update_user_profile(req, res))
+router.get('/user', authentication, authorisation("admin"), (req, res) => adminController.load_platform_users(req, res))
+router.put('/user/id/:user_id', authentication, authorisation("admin"), (req, res) => adminController.update_user_profile(req, res))
+router.get('/user/id/:user_id', authentication, authorisation("admin"), (req, res) => adminController.load_user_profile_by_id(req, res))
 
 module.exports = router;
